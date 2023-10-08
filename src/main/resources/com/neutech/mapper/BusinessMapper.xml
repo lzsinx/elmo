@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.neutech.mapper.BusinessMapper">
+
+    <resultMap id="Base" type="com.neutech.entity.Business">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="phone" column="phone"/>
+        <result property="email" column="email"/>
+        <result property="storeName" column="store_name"/>
+        <result property="storeAddress" column="store_address"/>
+        <result property="storeBrief" column="store_brief"/>
+        <result property="mainImage" column="main_image"/>
+        <result property="orderType" column="order_type"/>
+        <result property="startPrice" column="start_price"/>
+        <result property="deliveryPrice" column="delivery_price"/>
+        <result property="storeRemarks" column="store_remarks"/>
+        <result property="storeStatus" column="store_status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <select id="listAll" resultMap="Base">
+        select
+        <include refid="All_Column"/>
+        from e_business order by id desc
+    </select>
+
+    <sql id="All_Column">
+        id,username,store_name,email,phone,store_address,store_brief,main_image,order_type,start_price,
+        delivery_price,store_remarks,store_status,create_time,update_time
+    </sql>
+
+    <select id="listDynamics" resultMap="Base">
+        select
+        <include refid="All_Column"/>
+        from e_business
+        <where>
+
+            <if test="storeName != null">
+                <bind name="sn" value="'%' + storeName + '%'"/>
+                and store_name like #{sn}
+            </if>
+
+            <if test="storeStatus != null">
+                and store_status in
+                <foreach collection="storeStatus" item="status" open="(" close=")" separator=",">
+                    #{status}
+                </foreach>
+            </if>
+            <if test="orderType != null">
+                and order_type = #{orderType}
+            </if>
+        </where>
+        order by update_time desc
+    </select>
+
+
+    <update id="dynamicsUpdateById">
+        update e_business
+        <set>
+            <if test="username != null">
+                ,username = #{username}
+            </if>
+            <if test="password != null">
+                ,password = #{password}
+            </if>
+            <if test="phone != null">
+                ,phone = #{phone}
+            </if>
+            <if test="email != null">
+                ,email = #{email}
+            </if>
+            <if test="storeName != null">
+                ,store_name = #{storeName}
+            </if>
+            <if test="storeAddress != null">
+                ,store_address = #{storeAddress}
+            </if>
+            <if test="storeBrief != null">
+                ,store_brief = #{storeBrief}
+            </if>
+            <if test="mainImage != null">
+                ,main_image = #{mainImage}
+            </if>
+            <if test="orderType != null">
+                ,order_type = #{orderType}
+            </if>
+            <if test="startPrice != null">
+                ,start_price = #{startPrice}
+            </if>
+            <if test="deliveryPrice != null">
+                ,delivery_price = #{deliveryPrice}
+            </if>
+            <if test="storeRemarks != null">
+                ,store_remarks = #{storeRemarks}
+            </if>
+<!--            <if test="storeStatus != null">-->
+<!--                ,store_status = #{storeStatus}-->
+<!--            </if>-->
+            <if test="updateTime != null">
+                ,update_time = #{updateTime}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>
