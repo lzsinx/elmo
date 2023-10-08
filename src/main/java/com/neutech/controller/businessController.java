@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/business")
 public class businessController {
 
-    //测试重复提交
 
     @Autowired
     private BusinessService businessService;
